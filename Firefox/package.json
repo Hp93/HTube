@@ -1,0 +1,25 @@
+{
+    "title": "HTube",
+    "name": "firefox",
+    "version": "0.0.1",
+    "description": "Utilities for Youtube.",
+    "main": "index.js",
+    "author": "Hp93",
+    "engines": {
+        "firefox": ">=38.0a1",
+        "fennec": ">=38.0a1"
+    },
+    "license": "MIT",
+    "keywords": [
+        "jetpack"
+    ],
+    "preferences": [
+        {
+            "name": "defaultQuality",
+            "title": "Default Quality",
+            "type": "string",
+            "description": "Default quality for Youtube",
+            "value": "default"
+        }
+    ]
+}
