@@ -1,0 +1,72 @@
+<style>
+    .yt-uix-button-subscription-container {
+        margin-left: 10px;
+    }
+    
+    .yt-uix-button.yt-uix-button-size-default.yt-uix-button-default.yt-uix-button-empty.yt-uix-button-has-icon.yt-uix-subscription-preferences-button {
+        display: inline-block;
+    }
+    
+    .yt-uix-button.yt-uix-button-size-default.yt-uix-button-subscribe-branded.yt-uix-button-has-icon.no-icon-markup.yt-uix-subscription-button.yt-can-buffer {
+        background-color: #3579b7;
+    }
+    
+    .yt-uix-button:hover {
+        background-color: #24527C;
+    }
+</style>
+
+<span class="yt-uix-button-subscription-container">
+    <button class="yt-uix-button yt-uix-button-size-default yt-uix-button-subscribe-branded yt-uix-button-has-icon no-icon-markup yt-uix-subscription-button yt-can-buffer" type="button">
+        <span class="yt-uix-button-content">
+            <span>Replay</span>
+        </span>
+    </button>
+    <button class="yt-uix-button yt-uix-button-size-default yt-uix-button-default yt-uix-button-empty yt-uix-button-has-icon yt-uix-subscription-preferences-button" type="button">
+        <span class="yt-uix-button-icon-wrapper">
+            <span class="yt-uix-button-icon yt-uix-button-icon-subscription-preferences yt-sprite"></span>
+        </span>
+    </button>
+    <div class="yt-uix-overlay " data-overlay-style="primary" data-overlay-shape="tiny">
+        <div class="yt-dialog hid ">
+            <div class="yt-dialog-base">
+                <span class="yt-dialog-align"></span>
+                    <div class="yt-dialog-fg" role="dialog">
+                        <div class="yt-dialog-fg-content">
+                            <div class="yt-dialog-loading">
+                                <div class="yt-dialog-waiting-content">
+                                    <p class="yt-spinner ">
+                                        <span class="yt-spinner-img  yt-sprite" title="Loading icon"></span>
+                                        <span class="yt-spinner-message">Loading...</span>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="yt-dialog-content">
+                                <div class="subscription-preferences-overlay-content-container">
+                                    <div class="subscription-preferences-overlay-loading ">
+                                        <p class="yt-spinner ">
+                                            <span class="yt-spinner-img  yt-sprite" title="Loading icon"></span>
+                                            <span class="yt-spinner-message">Loading...</span>
+                                        </p>
+                                    </div>
+                                    <div class="subscription-preferences-overlay-content"></div>
+                                </div>
+                            </div>
+                            <div class="yt-dialog-working">
+                                <div class="yt-dialog-working-overlay"></div>
+                                <div class="yt-dialog-working-bubble"></div>
+                                <div class="yt-dialog-waiting-content">
+                                    <p class="yt-spinner ">
+                                        <span class="yt-spinner-img  yt-sprite" title="Loading icon"></span>
+                                        <span class="yt-spinner-message">Working...</span>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="yt-dialog-focus-trap" tabindex="0"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</span>
