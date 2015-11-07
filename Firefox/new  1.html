@@ -1,72 +1,103 @@
 <style>
-    .yt-uix-button-subscription-container {
+    .htube input {
+        width: 40px;
+        height: 10px;
+    }
+
+    .htube.yt-uix-button-subscription-container {
         margin-left: 10px;
     }
-    
-    .yt-uix-button.yt-uix-button-size-default.yt-uix-button-default.yt-uix-button-empty.yt-uix-button-has-icon.yt-uix-subscription-preferences-button {
+
+    .htube .button-label {
+        background-color: #a6a6a6;
+        padding: 0 8px 0 5.5px;
+        height: 24px;
+        max-width: 100%;
+        color: #FEFEFE;
+    }
+
+        .htube .button-label:hover {
+            background-color: #24527C;
+        }
+
+        .htube .button-label::before {
+            background: transparent url("//s.ytimg.com/yts/imgbin/www-hitchhiker-vflwDZqgY.png") no-repeat scroll -206px -250px;
+            width: 19px;
+            height: 14px;
+        }
+
+        .htube .button-label.active {
+            background-color: #3579b7;
+        }
+
+    .htube .setting-container {
+        overflow: hidden;
         display: inline-block;
+        vertical-align: middle;
     }
-    
-    .yt-uix-button.yt-uix-button-size-default.yt-uix-button-subscribe-branded.yt-uix-button-has-icon.no-icon-markup.yt-uix-subscription-button.yt-can-buffer {
-        background-color: #3579b7;
+
+    .htube .button-pref {
+        margin-left: -2px;
+        padding: 0 4px;
+        height: 24px;
+        border-radius: 0 2px 2px 0;
     }
-    
-    .yt-uix-button:hover {
-        background-color: #24527C;
-    }
+
+        .htube .button-pref:hover {
+            border-color: #C6C6C6;
+            background: #F0F0F0 none repeat scroll 0 0;
+            box-shadow: 0 1px 0 #000000;
+            box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
+        }
+
+        .htube .button-pref::before {
+            background: transparent url("//s.ytimg.com/yts/imgbin/www-hitchhiker-vflwDZqgY.png") no-repeat scroll -150px -137px;
+            width: 12px;
+            height: 12px;
+        }
+
+        .htube .button-pref:hover::before {
+            background: transparent url("//s.ytimg.com/yts/imgbin/www-hitchhiker-vflwDZqgY.png") no-repeat scroll -333px -185px;
+            width: 12px;
+            height: 12px;
+        }
 </style>
 
-<span class="yt-uix-button-subscription-container">
+
+
+<span class="htube yt-uix-button-subscription-container">
+    <button class="yt-uix-button yt-uix-button-has-icon no-icon-markup button-label" type="button">
+        <span class="yt-uix-button-content">
+            <span>Replay</span>
+        </span>
+    </button>
+    <span class="setting-container">
+        <span class="yt-subscription-button-subscriber-count-branded-horizontal yt-subscriber-count">
+            From <input type="text" /> To <input type="text" />
+        </span>
+    </span>
+    <button class="yt-uix-button yt-uix-button-default yt-uix-button-empty yt-uix-button-has-icon button-pref" type="button">
+        <span class="yt-uix-button-icon-wrapper">
+            <span class="yt-uix-button-icon yt-uix-button-icon-subscription-preferences yt-sprite"></span>
+        </span>
+    </button>
+</span>
+
+
+
+
+<!--<span class="htube yt-uix-button-subscription-container">
     <button class="yt-uix-button yt-uix-button-size-default yt-uix-button-subscribe-branded yt-uix-button-has-icon no-icon-markup yt-uix-subscription-button yt-can-buffer" type="button">
         <span class="yt-uix-button-content">
             <span>Replay</span>
         </span>
     </button>
+    <span class="yt-subscription-button-subscriber-count-branded-horizontal yt-subscriber-count">
+        From <input type="text" /> To <input type="text" />
+    </span>
     <button class="yt-uix-button yt-uix-button-size-default yt-uix-button-default yt-uix-button-empty yt-uix-button-has-icon yt-uix-subscription-preferences-button" type="button">
         <span class="yt-uix-button-icon-wrapper">
             <span class="yt-uix-button-icon yt-uix-button-icon-subscription-preferences yt-sprite"></span>
         </span>
     </button>
-    <div class="yt-uix-overlay " data-overlay-style="primary" data-overlay-shape="tiny">
-        <div class="yt-dialog hid ">
-            <div class="yt-dialog-base">
-                <span class="yt-dialog-align"></span>
-                    <div class="yt-dialog-fg" role="dialog">
-                        <div class="yt-dialog-fg-content">
-                            <div class="yt-dialog-loading">
-                                <div class="yt-dialog-waiting-content">
-                                    <p class="yt-spinner ">
-                                        <span class="yt-spinner-img  yt-sprite" title="Loading icon"></span>
-                                        <span class="yt-spinner-message">Loading...</span>
-                                    </p>
-                                </div>
-                            </div>
-                            <div class="yt-dialog-content">
-                                <div class="subscription-preferences-overlay-content-container">
-                                    <div class="subscription-preferences-overlay-loading ">
-                                        <p class="yt-spinner ">
-                                            <span class="yt-spinner-img  yt-sprite" title="Loading icon"></span>
-                                            <span class="yt-spinner-message">Loading...</span>
-                                        </p>
-                                    </div>
-                                    <div class="subscription-preferences-overlay-content"></div>
-                                </div>
-                            </div>
-                            <div class="yt-dialog-working">
-                                <div class="yt-dialog-working-overlay"></div>
-                                <div class="yt-dialog-working-bubble"></div>
-                                <div class="yt-dialog-waiting-content">
-                                    <p class="yt-spinner ">
-                                        <span class="yt-spinner-img  yt-sprite" title="Loading icon"></span>
-                                        <span class="yt-spinner-message">Working...</span>
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="yt-dialog-focus-trap" tabindex="0"></div>
-                </div>
-            </div>
-        </div>
-    </div>
-</span>
+</span>-->

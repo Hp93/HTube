@@ -12,14 +12,19 @@
 var pageMods = require("sdk/page-mod");
 var data = require("sdk/self").data;
 var preferences = require("sdk/simple-prefs");
+var selfLib = require("sdk/self");
 
 var pageMod = pageMods.PageMod({
     include: "*.youtube.com",
-    contentScriptFile: data.url("htube.js")
+    contentScriptFile: [
+        selfLib.data.url("script/utils.js"),
+        selfLib.data.url("script/ui.js"),
+        selfLib.data.url("script/htube.js")
+    ],
+    contentStyleFile: [selfLib.data.url("style/hstyle.css")]
 });
 
 var defaultQuality = preferences.prefs['defaultQuality', function (prefName) {
-    console.log(arguments);
     pageMod.port.emit("onDefaultQualityChange", arguments);
 }];
 
