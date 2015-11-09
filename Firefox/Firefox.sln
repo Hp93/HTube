@@ -3,6 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Firefox", "Firefox", "{C7262078-F524-4DF0-9C47-DD2C54BA3CEA}"
+	ProjectSection(SolutionItems) = preProject
+		data\style\hstyle.css = data\style\hstyle.css
+		data\script\htube.js = data\script\htube.js
+		index.js = index.js
+		data\script\ui.js = data\script\ui.js
+		data\script\utils.js = data\script\utils.js
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
