@@ -1,37 +1,47 @@
 "use strict";
 
 var HTube = function () {
-    var _player = document.getElementById("movie_player");
+    var _player = document.querySelector("#movie_player");
     var _replay = false;
-    var _data = {};
+    var _data = {
+        duration: "00:00"
+    };
+    var ui = new Interface();
 
-    //this.ToggleReplay = function (status, from, to) {
-    //    ///<summary>
-    //    /// Toggle replay.
-    //    ///</summary>
-    //    ///<param name="status">Turn replay function on or off</param>
-    //    ///<param name="from">If replay 1 particular part, input start time</param>
-    //    ///<param name="to">If replay 1 particular part, input end time</param>
+    //getInfo();
+    //ui.SetTime(_data.duration.replace(/\d/g, "0"), _data.duration);
 
-    //    _player.loop = status;
-    //    _replay = status;
+    function getInfo() {
+        _data.duration = window.Utils(_player.getDuration());
+    }
 
-    //    if (_data.replayInterval) {
-    //        window.clearInterval(_data.replayInterval);
-    //    }
+    this.ToggleReplay = function (status, from, to) {
+        ///<summary>
+        /// Toggle replay.
+        ///</summary>
+        ///<param name="status">Turn replay function on or off</param>
+        ///<param name="from">If replay 1 particular part, input start time</param>
+        ///<param name="to">If replay 1 particular part, input end time</param>
 
-    //    if (!from || !to || !_replay) {
-    //        return;
-    //    }
+        _player.loop = status;
+        _replay = status;
 
-    //    _player.seekTo(from, true);
+        if (_data.replayInterval) {
+            window.clearInterval(_data.replayInterval);
+        }
 
-    //    _data.replayInterval = window.setInterval(function () {
-    //        if (_player.getCurrentTime() >= to && isReplayOn) {
-    //            _player.seekTo(from, true);
-    //        }
-    //    }, 1000);
-    //};
+        if (!from || !to || !_replay) {
+            return;
+        }
+
+        _player.seekTo(from, true);
+
+        _data.replayInterval = window.setInterval(function () {
+            if (_player.getCurrentTime() >= to && _replay) {
+                _player.seekTo(from, true);
+            }
+        }, 1000);
+    };
 };
 
 if (document.readyState) {
@@ -40,20 +50,7 @@ if (document.readyState) {
     if (!window.htube) {
         window.htube = new HTube();
     }
-
-    if (!window.ui) {
-        window.ui = new Interface();
-    }
 }
-else {
-    document.addEventListener('DOMContentLoaded', function () {
-        console.log("DOMContentLoaded");
-
-        window.htube = new HTube();
-        window.ui = new Interface();
-    }, false);
-}
-
 
 
 //var qualities = {

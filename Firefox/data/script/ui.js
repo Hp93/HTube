@@ -45,33 +45,38 @@ var Interface = function () {
         }
     });
 
+
     var input = document.querySelectorAll(".setting-from, .setting-to");
 
     for (var i = 0; i < input.length; i++) {
-        input[i].addEventListener("focusout", function () {
-            if (document.querySelector(".setting-from").hasFocus || document.querySelector(".setting-to").hasFocus) {
-                return;
-            }
-            window.getComputedStyle(settingContainer)["margin-left"] = "-155px";
+        input[i].addEventListener("blur", function () {
+            //if (document.querySelector(".setting-from").hasFocus || document.querySelector(".setting-to").hasFocus) {
+            //    return;
+            //}
+            //settingContainer.style["margin-left"] = "-155px";
 
-            var timeChange = new Event("timeChange", {
-                from: document.querySelector(".setting-from").value,
-                to: document.querySelector(".setting-to").value
-            });
-            this.dispatchEvent(timeChange);
+            //var timeChange = new Event("timeChange", {
+            //    from: document.querySelector(".setting-from").value,
+            //    to: document.querySelector(".setting-to").value
+            //});
+            //this.dispatchEvent(timeChange);
         });
     }
 
     document.querySelector(".button-label").addEventListener("click", function () {
-        ToggleReplay();
+        if (document.querySelector(".button-label").className.indexOf("active") > 0) {
+            document.querySelector(".button-label").className = document.querySelector(".button-label").className.replace("active", "");
+        } else {
+            document.querySelector(".button-label").className += " active";
+        }
     });
 
 
     this.ToggleReplay = function () {
-        if (document.querySelector(".button-label").indexOf("active") > 0) {
-            document.querySelector(".button-label").replace("active", "");
+        if (document.querySelector(".button-label").className.indexOf("active") > 0) {
+            document.querySelector(".button-label").className = document.querySelector(".button-label").className.replace("active", "");
         } else {
-            document.querySelector(".button-label").className += "active";
+            document.querySelector(".button-label").className += " active";
         }
     }
 

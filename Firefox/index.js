@@ -15,13 +15,14 @@ var preferences = require("sdk/simple-prefs");
 var selfLib = require("sdk/self");
 
 var pageMod = pageMods.PageMod({
+    attachTo: ["top"],
     include: "*.youtube.com",
     contentScriptFile: [
-        selfLib.data.url("script/utils.js"),
-        selfLib.data.url("script/ui.js"),
-        selfLib.data.url("script/htube.js")
+        "./script/utils.js",
+        "./script/ui.js",
+        "./script/htube.js"
     ],
-    contentStyleFile: [selfLib.data.url("style/hstyle.css")]
+    contentStyleFile: "./style/hstyle.css"
 });
 
 var defaultQuality = preferences.prefs["defaultQuality", function (prefName) {

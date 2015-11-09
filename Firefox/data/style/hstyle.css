@@ -20,7 +20,7 @@
     }
 
     .htube .button-label::before {
-        background: transparent url("//s.ytimg.com/yts/imgbin/www-hitchhiker-vflwDZqgY.png") no-repeat scroll -206px -250px;
+        background: transparent url("https://s.ytimg.com/yts/imgbin/www-hitchhiker-vflwDZqgY.png") no-repeat scroll -206px -250px;
         width: 19px;
         height: 14px;
     }
@@ -28,6 +28,10 @@
     .htube .button-label.active {
         background-color: #3579b7;
     }
+
+        .htube .button-label.active:hover {
+            background-color: #24527C;
+        }
 
 /* Setting start */
 
@@ -39,8 +43,19 @@
 
     .htube .setting-container > span {
         margin-left: -155px;
-        transition: transform 2s;
+        -moz-transition: margin 1s;
+        -o-transition: margin 1s;
+        -webkit-transition: margin 1s;
+        transition: margin 1s;
     }
+
+    .htube .setting-container .button-pref {
+        display: none;
+    }
+
+.htube .button-label.active ~ .setting-container .button-pref {
+    display: inline-block;
+}
 
 /* Setting end */
 
@@ -59,13 +74,13 @@
     }
 
     .htube .button-pref::before {
-        background: transparent url("//s.ytimg.com/yts/imgbin/www-hitchhiker-vflwDZqgY.png") no-repeat scroll -150px -137px;
+        background: transparent url("https://s.ytimg.com/yts/imgbin/www-hitchhiker-vflwDZqgY.png") no-repeat scroll -150px -137px;
         width: 12px;
         height: 12px;
     }
 
     .htube .button-pref:hover::before {
-        background: transparent url("//s.ytimg.com/yts/imgbin/www-hitchhiker-vflwDZqgY.png") no-repeat scroll -333px -185px;
+        background: transparent url("https://s.ytimg.com/yts/imgbin/www-hitchhiker-vflwDZqgY.png") no-repeat scroll -333px -185px;
         width: 12px;
         height: 12px;
     }
