@@ -24,7 +24,7 @@ var pageMod = pageMods.PageMod({
     contentStyleFile: [selfLib.data.url("style/hstyle.css")]
 });
 
-var defaultQuality = preferences.prefs['defaultQuality', function (prefName) {
+var defaultQuality = preferences.prefs["defaultQuality", function (prefName) {
     pageMod.port.emit("onDefaultQualityChange", arguments);
 }];
 

@@ -2,19 +2,15 @@
 
 var Utilities = function () {
     this.appendHtml = function (el, str) {
-        try {
-            if (!el || !string) {
-                return;
-            }
+        if (!el || !str) {
+            return;
+        }
 
-            var div = document.createElement('div');
-            div.innerHTML = str;
+        var div = document.createElement('div');
+        div.innerHTML = str;
 
-            while (div.children.length > 0) {
-                el.appendChild(div.children[0]);
-            }
-        } catch (ex) {
-            console.log(ex);
+        while (div.children.length > 0) {
+            el.appendChild(div.children[0]);
         }
     }
 }

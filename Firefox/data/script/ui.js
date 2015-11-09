@@ -1,7 +1,7 @@
 "use strict";
 
 // Build UI
-var ui = function () {
+var Interface = function () {
     var setting_button = "" +
         '<span class="htube yt-uix-button-subscription-container">' +
             '<button class="yt-uix-button yt-uix-button-has-icon no-icon-markup button-label" type="button">' +
@@ -23,15 +23,16 @@ var ui = function () {
 
     Utils.appendHtml(document.querySelector("#watch7-subscription-container"), setting_button);
 
-    if (document.querySelector("#watch7-subscription-container")) {
+    if (!document.querySelector("#watch7-subscription-container")) {
         return;
     }
+    console.log(document.querySelector("#watch7-subscription-container"));
+
+    var settingContainer = document.querySelector(".htube .setting-container > span");
 
     document.querySelector(".button-pref").addEventListener("click", function () {
-        var settingContainer = document.querySelector(".htube .setting-container > span");
-
         if (window.getComputedStyle(settingContainer)["margin-left"] === "0px") {
-            window.getComputedStyle(settingContainer)["margin-left"] = "-155px";
+            settingContainer.style["margin-left"] = "-155px";
 
             var timeChange = new Event("timeChange", {
                 from: document.querySelector(".setting-from").value,
@@ -39,26 +40,30 @@ var ui = function () {
             });
             this.dispatchEvent(timeChange);
         } else {
-            window.getComputedStyle(settingContainer)["margin-left"] = "0px";
-            document.querySelector(".setting-form").focus();
+            settingContainer.style["margin-left"] = "0px";
+            document.querySelector(".setting-from").focus();
         }
     });
 
-    document.querySelectorAll(".setting-form, .setting-to").addEventListener("focusout", function () {
-        if (document.querySelector(".setting-form").hasFocus || document.querySelector(".setting-to").hasFocus) {
-            return;
-        }
-        window.getComputedStyle(settingContainer)["margin-left"] = "-155px";
+    var input = document.querySelectorAll(".setting-from, .setting-to");
 
-        var timeChange = new Event("timeChange", {
-            from: document.querySelector(".setting-from").value,
-            to: document.querySelector(".setting-to").value
+    for (var i = 0; i < input.length; i++) {
+        input[i].addEventListener("focusout", function () {
+            if (document.querySelector(".setting-from").hasFocus || document.querySelector(".setting-to").hasFocus) {
+                return;
+            }
+            window.getComputedStyle(settingContainer)["margin-left"] = "-155px";
+
+            var timeChange = new Event("timeChange", {
+                from: document.querySelector(".setting-from").value,
+                to: document.querySelector(".setting-to").value
+            });
+            this.dispatchEvent(timeChange);
         });
-        this.dispatchEvent(timeChange);
-    });
+    }
 
     document.querySelector(".button-label").addEventListener("click", function () {
-        this.ToggleReplay();
+        ToggleReplay();
     });
 
 
