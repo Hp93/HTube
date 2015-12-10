@@ -8,10 +8,11 @@ var HTube = function () {
     };
     var ui = new Interface();
 
-    //getInfo();
+    getInfo();
     //ui.SetTime(_data.duration.replace(/\d/g, "0"), _data.duration);
 
     function getInfo() {
+        debugger;
         _data.duration = window.Utils(_player.getDuration());
     }
 
