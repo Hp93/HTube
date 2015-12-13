@@ -18,6 +18,7 @@ var pageMod = pageMods.PageMod({
     attachTo: ["top"],
     include: "*.youtube.com",
     contentScriptFile: [
+        "./script/jquery-1.11.3.min.js",
         "./script/utils.js",
         "./script/ui.js",
         "./script/htube.js"

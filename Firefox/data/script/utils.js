@@ -1,18 +1,18 @@
 "use strict";
 
-var Utilities = function () {
-    this.appendHtml = function (el, str) {
-        if (!el || !str) {
-            return;
-        }
+function Utilities() {
+    //this.appendHtml = function (el, str) {
+    //    if (!el || !str) {
+    //        return;
+    //    }
 
-        var div = document.createElement('div');
-        div.innerHTML = str;
+    //    var div = document.createElement('div');
+    //    div.innerHTML = str;
 
-        while (div.children.length > 0) {
-            el.appendChild(div.children[0]);
-        }
-    };
+    //    while (div.children.length > 0) {
+    //        el.appendChild(div.children[0]);
+    //    }
+    //};
 
     this.getTime = function (time, separator) {
         if (isNaN(time) || time <= 0) {
@@ -37,4 +37,4 @@ var Utilities = function () {
     }
 }
 
-window.Utils = new Utilities();
+//window.Utils = new Utilities();

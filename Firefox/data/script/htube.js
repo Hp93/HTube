@@ -1,22 +1,28 @@
 "use strict";
 
-var HTube = function () {
-    var _player = document.querySelector("#movie_player");
-    var _replay = false;
-    var _data = {
-        duration: "00:00"
-    };
-    var ui = new Interface();
+function HTube() {
+    // Waiving Xray Vision
+    var Document;
 
-    getInfo();
-    //ui.SetTime(_data.duration.replace(/\d/g, "0"), _data.duration);
+    // Youtube player
+    var Player;
 
-    function getInfo() {
-        debugger;
-        _data.duration = window.Utils(_player.getDuration());
+    var SettingUI;
+
+    var Data = {
+        replay: false,
+        duration: "00:00",
+        quality: "small"
     }
 
-    this.ToggleReplay = function (status, from, to) {
+
+    //#region================ Private ===============================
+
+    function getPlayerInformation() {
+        Data.duration = formatTime(Player.getDuration());
+    }
+
+    function toggleReplay(status, from, to) {
         ///<summary>
         /// Toggle replay.
         ///</summary>
@@ -24,34 +30,77 @@ var HTube = function () {
         ///<param name="from">If replay 1 particular part, input start time</param>
         ///<param name="to">If replay 1 particular part, input end time</param>
 
-        _player.loop = status;
-        _replay = status;
+        Player.loop = status;
+        Data.replay = status;
 
-        if (_data.replayInterval) {
-            window.clearInterval(_data.replayInterval);
+        if (Data.replayInterval) {
+            window.clearInterval(Data.replayInterval);
         }
 
-        if (!from || !to || !_replay) {
+        if (!from || !to || !replay) {
             return;
         }
 
-        _player.seekTo(from, true);
+        Player.seekTo(from, true);
 
-        _data.replayInterval = window.setInterval(function () {
-            if (_player.getCurrentTime() >= to && _replay) {
-                _player.seekTo(from, true);
+        Data.replayInterval = window.setInterval(function () {
+            if (Player.getCurrentTime() >= to && replay) {
+                Player.seekTo(from, true);
             }
         }, 1000);
     };
+
+    function formatTime(time, separator) {
+        if (isNaN(time) || time <= 0) {
+            return "00";
+        }
+
+        if (!separator) {
+            separator = ":";
+        }
+
+        var totalSec = Math.floor(time);
+        var hours = parseInt(totalSec / 3600);
+        var minutes = parseInt(totalSec / 60) % 60;
+        var seconds = totalSec % 60;
+
+        var result = (minutes < 10 ? "0" + minutes : minutes) + separator + (seconds < 10 ? "0" + seconds : seconds);
+
+        if (hours > 0) {
+            result = (hours < 10 ? "0" + hours : hours) + separator + result;
+        }
+        return result;
+    }
+
+    function setQuality(suggestQuality) {
+        Player.setPlaybackQuality(suggestQuality);
+    }
+
+    //#endregion=====================================================
+
+
+    //#region================ Public ================================
+
+    this.Create = function () {
+        Document = window.wrappedJSObject.document;
+        Player = Document.querySelector("#movie_player");
+        SettingUI = new ControlSetting();
+
+        getPlayerInformation();
+        SettingUI.SetTime(Data.duration.replace(/\d/g, "0"), Data.duration);
+
+        setQuality(Data.quality);
+    }
+
+    //#endregion
 };
 
-if (document.readyState) {
-    console.log("document is ready");
-
+$(function () {
     if (!window.htube) {
         window.htube = new HTube();
+        window.htube.Create();
     }
-}
+});
 
 
 //var qualities = {
