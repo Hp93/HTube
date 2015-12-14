@@ -20,7 +20,7 @@ var pageMod = pageMods.PageMod({
     contentScriptFile: [
         "./script/jquery-1.11.3.min.js",
         "./script/utils.js",
-        "./script/ui.js",
+        "./script/interface.js",
         "./script/htube.js"
     ],
     contentStyleFile: "./style/hstyle.css"

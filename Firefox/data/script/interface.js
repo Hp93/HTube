@@ -29,11 +29,12 @@ function ControlSetting() {
     $("#watch7-subscription-container").append(setting_button);
 
     var ControlContainer = $(".htube.yt-uix-button-subscription-container");
-    var ActiveBtn = $(ControlContainer.find(".button-label")[0]);
-    var SettingContainer = $(ControlContainer.find(".htube .setting-container > span")[0]);
-    var InputFrom = $(ControlContainer.find(".setting-from")[0]);
-    var InputTo = $(ControlContainer.find(".setting-to")[0]);
-    var SettingBtn = $(ControlContainer.find(".button-pref")[0]);
+
+    //var InputFrom = $(ControlContainer.find(".setting-from")[0]);
+    //var InputTo = $(ControlContainer.find(".setting-to")[0]);
+    //var ActiveBtn = $(ControlContainer.find(".button-label")[0]);
+    //var SettingContainer = ControlContainer.find(".htube .setting-container > span")[0];
+    //var SettingBtn = ControlContainer.find(".button-pref")[0];
 
     addEventHandler();
 
@@ -41,30 +42,34 @@ function ControlSetting() {
     //#region================ Private ===============================
 
     function toggleReplay() {
-        if (ActiveBtn.className.indexOf("active") > 0) {
-            ActiveBtn.removeClass("active");
+        var activeBtn = $(".button-label", ControlContainer);
+
+        if (activeBtn.hasClass("active")) {
+            activeBtn.removeClass("active");
         } else {
-            ActiveBtn.addClass("active");
+            activeBtn.addClass("active");
         }
     }
 
     function addEventHandler() {
-        SettingBtn.on("click", function () {
-            if (SettingContainer.css("margin-left") === "0") {
-                SettingContainer.css("margin-left", "-155px");
+        $(".button-pref", ControlContainer).on("click", function (e) {
+            var settingContainer = $(e.target).prev(".setting-container").find("span");
+
+            if (settingContainer.css("margin-left") === "0px") {
+                settingContainer.css("margin-left", "-155px");
 
                 var timeChange = new Event("timeChange", {
-                    from: InputFrom.val(),
-                    to: InputTo.val()
+                    from: $(".setting-from", settingContainer).val(),
+                    to: $(".setting-to", settingContainer).val()
                 });
                 this.dispatchEvent(timeChange);
             } else {
-                SettingContainer.css("margin-left", "0");
-                InputFrom.focus();
+                settingContainer.css("margin-left", "0");
+                $(".setting-from", settingContainer).focus();
             }
         });
 
-        ActiveBtn.on("click", function () {
+        $(".button-label", ControlContainer).on("click", function () {
             toggleReplay();
         });
     }
@@ -79,14 +84,14 @@ function ControlSetting() {
     }
 
     this.SetTime = function (from, to) {
-        InputFrom.val(from);
-        InputTo.val(to);
+        $(".setting-from", ControlContainer).val(from);
+        $(".setting-to", ControlContainer).val(to);
     }
 
     this.GetTime = function () {
         return {
-            from: InputFrom.val(),
-            to: InputTo.val()
+            from: $(".setting-from", ControlContainer).val(),
+            to: $(".setting-to", ControlContainer).val()
         }
     }
 

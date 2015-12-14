@@ -11,8 +11,8 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "data", "data", "{C68F4170-5801-4EA3-8769-DEDC91985C95}"
 	ProjectSection(SolutionItems) = preProject
 		data\script\htube.js = data\script\htube.js
+		data\script\interface.js = data\script\interface.js
 		data\script\jquery-1.11.3.min.js = data\script\jquery-1.11.3.min.js
-		data\script\ui.js = data\script\ui.js
 		data\script\utils.js = data\script\utils.js
 	EndProjectSection
 EndProject
