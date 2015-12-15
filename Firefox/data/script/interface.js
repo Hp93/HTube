@@ -28,7 +28,7 @@ function ControlSetting() {
 
     $("#watch7-subscription-container").append(setting_button);
 
-    var ControlContainer = $(".htube.yt-uix-button-subscription-container");
+    var ControlContainer = $("#watch7-subscription-container > .htube");
 
     //var InputFrom = $(ControlContainer.find(".setting-from")[0]);
     //var InputTo = $(ControlContainer.find(".setting-to")[0]);
@@ -69,8 +69,12 @@ function ControlSetting() {
             }
         });
 
-        $(".button-label", ControlContainer).on("click", function () {
+        $(".button-label", ControlContainer).on("click", function (e) {
+            // User command
             toggleReplay();
+
+            // Trigger event
+            e.target.trigger("setting:replay");
         });
     }
 
