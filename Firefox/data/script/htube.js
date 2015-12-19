@@ -84,10 +84,13 @@ function HTube() {
     this.Create = function () {
         Document = window.wrappedJSObject.document;
         Player = Document.querySelector("#movie_player");
-        SettingUI = new ControlSetting();
-
         getPlayerInformation();
+
+        SettingUI = new ControlSetting();
         SettingUI.SetTime(Data.duration.replace(/\d/g, "0"), Data.duration);
+        SettingUI.on("setting:replay", function() {
+            
+        });
 
         setQuality(Data.quality);
     }
