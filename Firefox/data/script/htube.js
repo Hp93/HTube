@@ -27,10 +27,10 @@ function HTube() {
         /// Toggle replay.
         ///</summary>
         ///<param name="status">Turn replay function on or off</param>
-        ///<param name="from">If replay 1 particular part, input start time</param>
-        ///<param name="to">If replay 1 particular part, input end time</param>
+        ///<param name="from">Replay start time</param>
+        ///<param name="to">Replay end time</param>
 
-        Player.loop = status;
+        $(Player).find("video")[0].loop = status;
         Data.replay = status;
 
         if (Data.replayInterval) {
@@ -88,8 +88,13 @@ function HTube() {
 
         SettingUI = new ControlSetting();
         SettingUI.SetTime(Data.duration.replace(/\d/g, "0"), Data.duration);
-        SettingUI.on("setting:replay", function() {
-            
+
+        SettingUI.ui.on("setting:replayChange", function (e, state) {
+            toggleReplay(state);
+        });
+
+        SettingUI.ui.on("setting:timeChange", function (e, time) {
+            toggleReplay(Data.replay, time.from, time.to);
         });
 
         setQuality(Data.quality);

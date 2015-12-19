@@ -29,12 +29,7 @@ function ControlSetting() {
     $("#watch7-subscription-container").append(setting_button);
 
     var ControlContainer = $("#watch7-subscription-container > .htube");
-
-    //var InputFrom = $(ControlContainer.find(".setting-from")[0]);
-    //var InputTo = $(ControlContainer.find(".setting-to")[0]);
-    //var ActiveBtn = $(ControlContainer.find(".button-label")[0]);
-    //var SettingContainer = ControlContainer.find(".htube .setting-container > span")[0];
-    //var SettingBtn = ControlContainer.find(".button-pref")[0];
+    this.ui = ControlContainer;
 
     addEventHandler();
 
@@ -46,8 +41,10 @@ function ControlSetting() {
 
         if (activeBtn.hasClass("active")) {
             activeBtn.removeClass("active");
+            return false;
         } else {
             activeBtn.addClass("active");
+            return true;
         }
     }
 
@@ -58,25 +55,25 @@ function ControlSetting() {
             if (settingContainer.css("margin-left") === "0px") {
                 settingContainer.css("margin-left", "-155px");
 
-                var timeChange = new Event("timeChange", {
+                ControlContainer.trigger("setting:timeChange", {
                     from: $(".setting-from", settingContainer).val(),
                     to: $(".setting-to", settingContainer).val()
                 });
-                this.dispatchEvent(timeChange);
             } else {
                 settingContainer.css("margin-left", "0");
                 $(".setting-from", settingContainer).focus();
             }
         });
 
-        $(".button-label", ControlContainer).on("click", function (e) {
+        $(".button-label", ControlContainer).on("click", function () {
             // User command
-            toggleReplay();
+            var isOn = toggleReplay();
 
             // Trigger event
-            e.target.trigger("setting:replay");
+            ControlContainer.trigger("setting:replayChange", isOn);
         });
     }
+
 
     //#endregion
 
