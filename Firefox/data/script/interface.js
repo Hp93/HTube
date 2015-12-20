@@ -1,10 +1,7 @@
 "use strict";
 
 function ControlSetting() {
-    if ($("#watch7-subscription-container").length <= 0) {
-        return;
-    }
-
+    var ControlContainer;
     var setting_button =
         "<span class='htube yt-uix-button-subscription-container'>" +
             "<button class='yt-uix-button yt-uix-button-has-icon no-icon-markup button-label' type='button' title='Turn on replay'>" +
@@ -15,6 +12,7 @@ function ControlSetting() {
 
             "<span class='setting-container'>" +
                 "<span class='yt-subscription-button-subscriber-count-branded-horizontal yt-subscriber-count'>" +
+                    "<input class='setting-timerchk' type='checkbox' />" +
                     "From <input class='setting-from' type='text' /> To <input class='setting-to' type='text' />" +
                 "</span>" +
             "</span>" +
@@ -25,13 +23,6 @@ function ControlSetting() {
                 "</span>" +
             "</button>" +
         "</span>";
-
-    $("#watch7-subscription-container").append(setting_button);
-
-    var ControlContainer = $("#watch7-subscription-container > .htube");
-    this.ui = ControlContainer;
-
-    addEventHandler();
 
 
     //#region================ Private ===============================
@@ -56,12 +47,7 @@ function ControlSetting() {
 
             if (settingContainer.css("margin-left") === "0px") {
                 // Move container to the left, out of visible zone to hide it
-                settingContainer.css("margin-left", "-155px");
-
-                ControlContainer.trigger("setting:timeChange", {
-                    from: $(".setting-from", settingContainer).val(),
-                    to: $(".setting-to", settingContainer).val()
-                });
+                settingContainer.css("margin-left", "-191px");
             } else {
                 // Move container back to normal position so it can be visible
                 settingContainer.css("margin-left", "0");
@@ -75,6 +61,10 @@ function ControlSetting() {
 
             // Trigger event
             ControlContainer.trigger("setting:replayChange", isOn);
+        });
+
+        $(".setting-timerchk", ControlContainer).on("change", function (e) {
+            ControlContainer.trigger("setting:timeChange", e.target.checked);
         });
     }
 
@@ -91,6 +81,7 @@ function ControlSetting() {
     this.SetTime = function (from, to) {
         $(".setting-from", ControlContainer).val(from);
         $(".setting-to", ControlContainer).val(to);
+        $(".setting-timerchk", ControlContainer)[0].checked = false;
     }
 
     this.GetTime = function () {
@@ -98,6 +89,22 @@ function ControlSetting() {
             from: $(".setting-from", ControlContainer).val(),
             to: $(".setting-to", ControlContainer).val()
         }
+    }
+
+    this.Create = function () {
+        if ($("#watch7-subscription-container").length <= 0) {
+            return false;
+        }
+
+        if ($("#watch7-subscription-container").find(".htube").length <= 0) {
+            $("#watch7-subscription-container").append(setting_button);
+
+            ControlContainer = $("#watch7-subscription-container > .htube");
+            this.ui = ControlContainer;
+
+            addEventHandler();
+        }
+        return true;
     }
 
     //#endregion=====================================================

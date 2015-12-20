@@ -41,8 +41,13 @@
     vertical-align: middle;
 }
 
+    .htube .setting-container input[type=checkbox] {
+        width: 13px;
+        vertical-align: sub;
+    }
+
     .htube .setting-container > span {
-        margin-left: -155px;
+        margin-left: -191px;
         -moz-transition: margin 1s;
         -o-transition: margin 1s;
         -webkit-transition: margin 1s;
@@ -51,6 +56,11 @@
 
     .htube .setting-container .button-pref {
         display: none;
+    }
+
+    .htube .setting-container .setting-from,
+    .htube .setting-container .setting-to {
+        width: 50px;
     }
 
 .htube .button-label.active ~ .setting-container .button-pref {

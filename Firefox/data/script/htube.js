@@ -1,5 +1,7 @@
 "use strict";
 
+/// Youtbe API: https://developers.google.com/youtube/iframe_api_reference
+
 function HTube() {
     // Waiving Xray Vision
     var Document;
@@ -9,10 +11,25 @@ function HTube() {
 
     var SettingUI;
 
+    // Configuration data
     var Data = {
-        replay: false,
+        replay: false,  // replay status
         duration: "00:00",
-        quality: "small"
+        quality: "small",
+        replayInterval: null,
+        prevUrl: ""
+    }
+
+    // Youtube API data
+    var YT = {
+        PlayerState: {
+            unstarted: -1,
+            ended: 0,
+            playing: 1,
+            paused: 2,
+            buffering: 3,
+            video_cued: 5
+        }
     }
 
 
@@ -20,34 +37,29 @@ function HTube() {
 
     function getPlayerInformation() {
         Data.duration = formatTime(Player.getDuration());
+        Data.prevUrl = Player.getVideoUrl();
     }
 
-    function toggleReplay(status, from, to) {
+    function setReplay(status, timer) {
         ///<summary>
         /// Toggle replay.
         ///</summary>
         ///<param name="status">Turn replay function on or off</param>
-        ///<param name="from">Replay start time</param>
-        ///<param name="to">Replay end time</param>
 
-        $(Player).find("video")[0].loop = status;
         Data.replay = status;
 
-        if (Data.replayInterval) {
-            window.clearInterval(Data.replayInterval);
-        }
+        if (status && timer) {
+            $(Player).find("video")[0].loop = false;
+            setReplayTimer();
+        } else {
+            $(Player).find("video")[0].loop = status;
 
-        if (!from || !to || !replay) {
-            return;
-        }
-
-        Player.seekTo(from, true);
-
-        Data.replayInterval = window.setInterval(function () {
-            if (Player.getCurrentTime() >= to && replay) {
-                Player.seekTo(from, true);
+            if (status) {
+                if (Player.getPlayerState() !== YT.PlayerState.playing || Player.getPlayerState() !== YT.PlayerState.buffering) {
+                    Player.playVideo();
+                }
             }
-        }, 1000);
+        }
     };
 
     function formatTime(time, separator) {
@@ -76,6 +88,96 @@ function HTube() {
         Player.setPlaybackQuality(suggestQuality);
     }
 
+    function getSeconds(time, separator) {
+        if (!separator) {
+            separator = ":";
+        }
+
+        var sakurako_san = time.split(separator);
+        var h, m, s;
+
+        switch (sakurako_san.length) {
+            case 2:
+                m = parseInt(sakurako_san[0]);
+                s = parseInt(sakurako_san[1]);
+
+                if (isNaN(m) || isNaN(s)) {
+                    return 0;
+                }
+                return m * 60 + s;
+
+            case 3:
+                h = parseInt(sakurako_san[0]);
+                m = parseInt(sakurako_san[1]);
+                s = parseInt(sakurako_san[2]);
+
+                if (isNaN(h) || isNaN(m) || isNaN(s)) {
+                    return 0;
+                }
+                return h * 60 * 60 + m * 60 + s;
+
+            default:
+                return 0;
+        }
+    }
+
+    function setReplayTimer() {
+        ///<summary>
+        /// Set replay timer used to replay only 1 part of the video.
+        ///</summary>
+        if (Data.replayInterval) {
+            window.clearInterval(Data.replayInterval);
+        }
+
+        var from = getSeconds(SettingUI.GetTime().from);
+        var to = getSeconds(SettingUI.GetTime().to);
+
+        Player.seekTo(from, true);
+
+        Data.replayInterval = window.setInterval(function () {
+            console.log("interval");
+
+            if (!Data.replay) {
+                window.clearInterval(Data.replayInterval);
+                return;
+            }
+
+            if (Player.getCurrentTime() >= to) {
+                Player.seekTo(from, true);
+            }
+        }, 1000);
+    }
+
+    function setupUI() {
+        SettingUI = new ControlSetting();
+        var result = SettingUI.Create();
+
+        if (!result) {
+            return;
+        }
+        SettingUI.SetTime(Data.duration.replace(/\d/g, "0"), Data.duration);
+
+        SettingUI.ui.on("setting:replayChange", function (e, state) {
+            setReplay(state);
+        });
+
+        SettingUI.ui.on("setting:timeChange", function (e, timer) {
+            if (timer) {
+                setReplay(Data.replay, timer);
+            } else {
+                if (Data.replayInterval) {
+                    window.clearInterval(Data.replayInterval);
+                }
+            }
+        });
+    }
+
+    function initialize() {
+        getPlayerInformation();
+        setupUI();
+        setQuality(Data.quality);
+    }
+
     //#endregion=====================================================
 
 
@@ -83,21 +185,27 @@ function HTube() {
 
     this.Create = function () {
         Document = window.wrappedJSObject.document;
-        Player = Document.querySelector("#movie_player");
-        getPlayerInformation();
 
-        SettingUI = new ControlSetting();
-        SettingUI.SetTime(Data.duration.replace(/\d/g, "0"), Data.duration);
+        // The player may not be here, but I can sense the turbulence in the wind, we will see it soon ...
+        var i = window.setInterval(function () {
+            console.log("interval");
+            Player = Document.querySelector("#movie_player");
 
-        SettingUI.ui.on("setting:replayChange", function (e, state) {
-            toggleReplay(state);
-        });
+            if (!Player) {
+                return;
+            }
 
-        SettingUI.ui.on("setting:timeChange", function (e, time) {
-            toggleReplay(Data.replay, time.from, time.to);
-        });
+            window.clearInterval(i);
+            initialize();
 
-        setQuality(Data.quality);
+            $(Player).on("onStateChange", function () {
+                if (Player.getVideoUrl() !== Data.prevUrl) {
+                    console.log(Player.getVideoUrl());
+                    console.log(Data.prevUrl);
+                    initialize();
+                }
+            });
+        }, 200);
     }
 
     //#endregion
