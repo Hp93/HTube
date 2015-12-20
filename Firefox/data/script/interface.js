@@ -7,7 +7,7 @@ function ControlSetting() {
 
     var setting_button =
         "<span class='htube yt-uix-button-subscription-container'>" +
-            "<button class='yt-uix-button yt-uix-button-has-icon no-icon-markup button-label' type='button'>" +
+            "<button class='yt-uix-button yt-uix-button-has-icon no-icon-markup button-label' type='button' title='Turn on replay'>" +
                 "<span class='yt-uix-button-content'>" +
                     "<span>Replay</span>" +
                 "</span>" +
@@ -41,9 +41,11 @@ function ControlSetting() {
 
         if (activeBtn.hasClass("active")) {
             activeBtn.removeClass("active");
+            activeBtn.attr("title", "Turn on replay");
             return false;
         } else {
             activeBtn.addClass("active");
+            activeBtn.attr("title", "Turn off replay");
             return true;
         }
     }
@@ -53,6 +55,7 @@ function ControlSetting() {
             var settingContainer = $(e.target).prev(".setting-container").find("span");
 
             if (settingContainer.css("margin-left") === "0px") {
+                // Move container to the left, out of visible zone to hide it
                 settingContainer.css("margin-left", "-155px");
 
                 ControlContainer.trigger("setting:timeChange", {
@@ -60,6 +63,7 @@ function ControlSetting() {
                     to: $(".setting-to", settingContainer).val()
                 });
             } else {
+                // Move container back to normal position so it can be visible
                 settingContainer.css("margin-left", "0");
                 $(".setting-from", settingContainer).focus();
             }
