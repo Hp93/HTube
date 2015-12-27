@@ -36,8 +36,11 @@ function HTube() {
     //#region================ Private ===============================
 
     function getPlayerInformation() {
+        //console.log("getPlayerInformation called");
         Data.duration = formatTime(Player.getDuration());
-        Data.prevUrl = Player.getVideoUrl();
+
+        //Data.prevUrl = Player.getVideoUrl();
+        Data.prevUrl = Document.location.toString();
     }
 
     function setReplay(status, timer) {
@@ -46,19 +49,17 @@ function HTube() {
         ///</summary>
         ///<param name="status">Turn replay function on or off</param>
 
+        //console.log("setReplay called");
         Data.replay = status;
+        $(Player).find("video")[0].loop = status;
 
-        if (status && timer) {
-            $(Player).find("video")[0].loop = false;
+        if (timer) {
             setReplayTimer();
-        } else {
-            $(Player).find("video")[0].loop = status;
+        }
 
-            if (status) {
-                if (Player.getPlayerState() !== YT.PlayerState.playing || Player.getPlayerState() !== YT.PlayerState.buffering) {
-                    Player.playVideo();
-                }
-            }
+        // Play video if replay is turned on and video is paused.
+        if (status && (Player.getPlayerState() !== YT.PlayerState.playing || Player.getPlayerState() !== YT.PlayerState.buffering)) {
+            Player.playVideo();
         }
     };
 
@@ -135,7 +136,7 @@ function HTube() {
         Player.seekTo(from, true);
 
         Data.replayInterval = window.setInterval(function () {
-            console.log("interval");
+            //console.log("interval");
 
             if (!Data.replay) {
                 window.clearInterval(Data.replayInterval);
@@ -149,8 +150,11 @@ function HTube() {
     }
 
     function setupUI() {
+        //console.log("setupUI called");
         SettingUI = new ControlSetting();
         var result = SettingUI.Create();
+
+        console.log(result);
 
         if (!result) {
             return;
@@ -173,9 +177,12 @@ function HTube() {
     }
 
     function initialize() {
-        getPlayerInformation();
-        setupUI();
-        setQuality(Data.quality);
+        //console.log("initialize called");
+        window.setTimeout(function () {
+            getPlayerInformation();
+            setupUI();
+            //setQuality(Data.quality);
+        }, 1000);
     }
 
     //#endregion=====================================================
@@ -187,25 +194,33 @@ function HTube() {
         Document = window.wrappedJSObject.document;
 
         // The player may not be here, but I can sense the turbulence in the wind, we will see it soon ...
-        var i = window.setInterval(function () {
-            console.log("interval");
+        window.htubeInterval = window.setInterval(function () {
+            console.log("interval called");
             Player = Document.querySelector("#movie_player");
 
             if (!Player) {
                 return;
             }
-
-            window.clearInterval(i);
+            window.clearInterval(window.htubeInterval);
             initialize();
 
-            $(Player).on("onStateChange", function () {
-                if (Player.getVideoUrl() !== Data.prevUrl) {
-                    console.log(Player.getVideoUrl());
-                    console.log(Data.prevUrl);
+            //$(Player).on("onStateChange", function () {
+            //    console.log("onStateChange");
+            //    if (Player.getVideoUrl() !== Data.prevUrl) {
+            //        console.log(Player.getVideoUrl());
+            //        console.log(Data.prevUrl);
+            //        initialize();
+            //    }
+            //});
+
+            window.setInterval(function () {
+                if (Document.location.toString() !== Data.prevUrl) {
+                    console.log("url changed");
                     initialize();
                 }
-            });
-        }, 200);
+            }, 200);
+
+        }, 500);
     }
 
     //#endregion

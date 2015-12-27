@@ -92,18 +92,23 @@ function ControlSetting() {
     }
 
     this.Create = function () {
+        console.log("create interface");
+
         if ($("#watch7-subscription-container").length <= 0) {
+            console.log("no container found");
             return false;
         }
 
         if ($("#watch7-subscription-container").find(".htube").length <= 0) {
+            console.log("no htube found");
             $("#watch7-subscription-container").append(setting_button);
-
             ControlContainer = $("#watch7-subscription-container > .htube");
-            this.ui = ControlContainer;
-
             addEventHandler();
+        } else {
+            console.log("htube found");
+            ControlContainer = $("#watch7-subscription-container > .htube");
         }
+        this.ui = ControlContainer;
         return true;
     }
 
