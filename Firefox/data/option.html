@@ -1,0 +1,57 @@
+<html>
+<head>
+    <link rel="stylesheet" href="./style/bootstrap.min.css" />
+    <style>
+        .container {
+            width: 330px;
+            height: 300px;
+            padding: 0;
+        }
+
+        div.row {
+            margin: 5px 0;
+        }
+
+        .footer {
+            background-color: #f0f0f0;
+            padding: 10px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        
+        <hr />
+        <div class="row">
+            <div class="col-xs-12">
+                <label>Default quality</label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12">
+                <select class="form-control">
+                    <option value="highres">Best quality</option>
+                    <option value="hd1080">1080p</option>
+                    <option value="hd720">720p</option>
+                    <option value="large">480p</option>
+                    <option value="medium">360p</option>
+                    <option value="small">240p</option>
+                    <option value="default">Auto</option>
+                </select>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12" style="text-align: right;">
+                <button type="button" class="btn btn-sm btn-primary">Accept</button>
+            </div>
+        </div>
+        <div class="footer navbar-fixed-bottom">
+            <div class="row">
+                <div class="col-xs-4"><a href="mailto:abc@gmail.com">Feedback</a></div>
+                <div class="col-xs-8">HTube - Version 1.0.0</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

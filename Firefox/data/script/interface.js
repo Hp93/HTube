@@ -86,6 +86,7 @@ function ControlSetting() {
 
     this.GetTime = function () {
         return {
+            enable: $(".setting-timerchk", ControlContainer)[0].checked,
             from: $(".setting-from", ControlContainer).val(),
             to: $(".setting-to", ControlContainer).val()
         }

@@ -9,9 +9,10 @@ function HTube() {
     // Youtube player
     var Player;
 
+    // The UI for setting replay status and timer
     var SettingUI;
 
-    // Configuration data
+    // Miscellaneous configuration data
     var Data = {
         replay: false,  // replay status
         duration: "00:00",
@@ -29,18 +30,15 @@ function HTube() {
             paused: 2,
             buffering: 3,
             video_cued: 5
-        }
+        },
+        PlayerStateClass: ["unstarted-mode", "ended-mode", "playing-mode", "paused-mode", "buffering-mode"]
     }
 
 
     //#region================ Private ===============================
 
     function getPlayerInformation() {
-        //console.log("getPlayerInformation called");
         Data.duration = formatTime(Player.getDuration());
-
-        //Data.prevUrl = Player.getVideoUrl();
-        Data.prevUrl = Document.location.toString();
     }
 
     function setReplay(status, timer) {
@@ -49,19 +47,97 @@ function HTube() {
         ///</summary>
         ///<param name="status">Turn replay function on or off</param>
 
-        //console.log("setReplay called");
         Data.replay = status;
         $(Player).find("video")[0].loop = status;
 
-        if (timer) {
-            setReplayTimer();
-        }
+        if (status) {
+            if (timer || SettingUI.GetTime().enable) {
+                setReplayTimer();
+            }
 
-        // Play video if replay is turned on and video is paused.
-        if (status && (Player.getPlayerState() !== YT.PlayerState.playing || Player.getPlayerState() !== YT.PlayerState.buffering)) {
-            Player.playVideo();
+            // Play video if replay is turned on and video is paused.
+            if ((Player.getPlayerState() !== YT.PlayerState.playing) || (Player.getPlayerState() !== YT.PlayerState.buffering)) {
+                Player.playVideo();
+            }
         }
     };
+
+    function setQuality(suggestQuality) {
+        Player.setPlaybackQuality(suggestQuality);
+    }
+
+    function setReplayTimer() {
+        ///<summary>
+        /// Set replay timer used to replay only 1 part of the video.
+        ///</summary>
+        if (Data.replayInterval) {
+            window.clearInterval(Data.replayInterval);
+        }
+
+        var from = getSeconds(SettingUI.GetTime().from);
+        var to = getSeconds(SettingUI.GetTime().to);
+
+        Player.seekTo(from, true);
+
+        Data.replayInterval = window.setInterval(function () {
+            if (!Data.replay) {
+                window.clearInterval(Data.replayInterval);
+                return;
+            }
+
+            if (Player.getCurrentTime() >= to) {
+                Player.seekTo(from, true);
+            }
+        }, 1000);
+    }
+
+    function setupUI() {
+        SettingUI = new ControlSetting();
+        var result = SettingUI.Create();
+
+        console.log(result);
+
+        if (!result) {
+            return;
+        }
+        SettingUI.SetTime(Data.duration.replace(/\d/g, "0"), Data.duration);
+
+        SettingUI.ui.on("setting:replayChange", function (e, state) {
+            setReplay(state);
+        });
+
+        SettingUI.ui.on("setting:timeChange", function (e, timer) {
+            if (timer) {
+                setReplay(Data.replay, timer);
+            } else {
+                if (Data.replayInterval) {
+                    window.clearInterval(Data.replayInterval);
+                }
+            }
+        });
+    }
+
+    function initialize() {
+        window.setTimeout(function () {
+            getPlayerInformation();
+            setupUI();
+            //setQuality(Data.quality);
+        }, 1000);
+    }
+
+    function setPlayerSize(mode) {
+        var btn = $("button.ytp-size-button.ytp-button");
+
+        if (mode === "cinema" && btn.attr("title") === "Cinema mode") {
+            btn.click();
+        }
+
+        if (mode === "default" && btn.attr("title") === "Default view:") {
+            btn.click();
+        }
+    }
+
+    ////////////////General methods////////////////
 
     function formatTime(time, separator) {
         if (isNaN(time) || time <= 0) {
@@ -83,10 +159,6 @@ function HTube() {
             result = (hours < 10 ? "0" + hours : hours) + separator + result;
         }
         return result;
-    }
-
-    function setQuality(suggestQuality) {
-        Player.setPlaybackQuality(suggestQuality);
     }
 
     function getSeconds(time, separator) {
@@ -122,69 +194,6 @@ function HTube() {
         }
     }
 
-    function setReplayTimer() {
-        ///<summary>
-        /// Set replay timer used to replay only 1 part of the video.
-        ///</summary>
-        if (Data.replayInterval) {
-            window.clearInterval(Data.replayInterval);
-        }
-
-        var from = getSeconds(SettingUI.GetTime().from);
-        var to = getSeconds(SettingUI.GetTime().to);
-
-        Player.seekTo(from, true);
-
-        Data.replayInterval = window.setInterval(function () {
-            //console.log("interval");
-
-            if (!Data.replay) {
-                window.clearInterval(Data.replayInterval);
-                return;
-            }
-
-            if (Player.getCurrentTime() >= to) {
-                Player.seekTo(from, true);
-            }
-        }, 1000);
-    }
-
-    function setupUI() {
-        //console.log("setupUI called");
-        SettingUI = new ControlSetting();
-        var result = SettingUI.Create();
-
-        console.log(result);
-
-        if (!result) {
-            return;
-        }
-        SettingUI.SetTime(Data.duration.replace(/\d/g, "0"), Data.duration);
-
-        SettingUI.ui.on("setting:replayChange", function (e, state) {
-            setReplay(state);
-        });
-
-        SettingUI.ui.on("setting:timeChange", function (e, timer) {
-            if (timer) {
-                setReplay(Data.replay, timer);
-            } else {
-                if (Data.replayInterval) {
-                    window.clearInterval(Data.replayInterval);
-                }
-            }
-        });
-    }
-
-    function initialize() {
-        //console.log("initialize called");
-        window.setTimeout(function () {
-            getPlayerInformation();
-            setupUI();
-            //setQuality(Data.quality);
-        }, 1000);
-    }
-
     //#endregion=====================================================
 
 
@@ -195,7 +204,6 @@ function HTube() {
 
         // The player may not be here, but I can sense the turbulence in the wind, we will see it soon ...
         window.htubeInterval = window.setInterval(function () {
-            console.log("interval called");
             Player = Document.querySelector("#movie_player");
 
             if (!Player) {
@@ -204,21 +212,20 @@ function HTube() {
             window.clearInterval(window.htubeInterval);
             initialize();
 
-            //$(Player).on("onStateChange", function () {
-            //    console.log("onStateChange");
-            //    if (Player.getVideoUrl() !== Data.prevUrl) {
-            //        console.log(Player.getVideoUrl());
-            //        console.log(Data.prevUrl);
-            //        initialize();
-            //    }
-            //});
+            var observer = new MutationObserver(function (mutations) {
+                mutations.forEach(function () {
+                    if (Document.location.toString() !== Data.prevUrl && Document.location.toString() !== "https://www.youtube.com/") {
+                        // Optimized: set new URL asap to prevent possible duplicate initialize call
+                        Data.prevUrl = Document.location.toString();
+                        initialize();
+                    } else {
+                        Data.prevUrl = Document.location.toString();
+                    }
+                });
+            });
 
-            window.setInterval(function () {
-                if (Document.location.toString() !== Data.prevUrl) {
-                    console.log("url changed");
-                    initialize();
-                }
-            }, 200);
+            // Start observe
+            observer.observe(Player, { attributes: true, attributeOldValue: true });
 
         }, 500);
     }
