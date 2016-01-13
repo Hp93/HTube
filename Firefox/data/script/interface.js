@@ -55,6 +55,14 @@ function ControlSetting() {
             }
         });
 
+        $(".setting-from").on("focusout", function (e) {
+            ControlContainer.trigger("setting:settingFromChange", $(e.target).val());
+        });
+
+        $(".setting-to").on("focusout", function (e) {
+            ControlContainer.trigger("setting:settingToChange", $(e.target).val());
+        });
+
         $(".button-label", ControlContainer).on("click", function () {
             // User command
             var isOn = toggleReplay();
@@ -93,20 +101,15 @@ function ControlSetting() {
     }
 
     this.Create = function () {
-        console.log("create interface");
-
         if ($("#watch7-subscription-container").length <= 0) {
-            console.log("no container found");
             return false;
         }
 
         if ($("#watch7-subscription-container").find(".htube").length <= 0) {
-            console.log("no htube found");
             $("#watch7-subscription-container").append(setting_button);
             ControlContainer = $("#watch7-subscription-container > .htube");
             addEventHandler();
         } else {
-            console.log("htube found");
             ControlContainer = $("#watch7-subscription-container > .htube");
         }
         this.ui = ControlContainer;

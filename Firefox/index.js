@@ -11,10 +11,9 @@
 
 var pageMods = require("sdk/page-mod");
 var data = require("sdk/self").data;
-var preferences = require("sdk/simple-prefs");
-var selfLib = require("sdk/self");
-var panels = require("sdk/panel");
-var buttons = require("sdk/ui/button/toggle");
+//var preferences = require("sdk/simple-prefs");
+//var panels = require("sdk/panel");
+//var buttons = require("sdk/ui/button/toggle");
 
 
 var pageMod = pageMods.PageMod({
@@ -22,7 +21,6 @@ var pageMod = pageMods.PageMod({
     include: "*.youtube.com",
     contentScriptFile: [
         "./script/jquery-1.11.3.min.js",
-        "./script/utils.js",
         "./script/interface.js",
         "./script/htube.js"
     ],
@@ -34,36 +32,36 @@ var pageMod = pageMods.PageMod({
 //}];
 
 
-//====================== Option button ======================
-var button = buttons.ToggleButton({
-    id: "htube-option",
-    label: "HTube Option",
-    icon: {
-        "16": "./image/htube-logo-16.png",
-        "32": "./image/htube-logo-32.png",
-        "64": "./image/htube-logo-64.png"
-    },
-    onClick: handleChange
-});
+////====================== Option button ======================
+//var button = buttons.ToggleButton({
+//    id: "htube-option",
+//    label: "HTube Option",
+//    icon: {
+//        "16": "./image/htube-logo-16.png",
+//        "32": "./image/htube-logo-32.png",
+//        "64": "./image/htube-logo-64.png"
+//    },
+//    onClick: handleChange
+//});
 
-function handleChange(state) {
-    if (state.checked) {
-        panel.show({
-            position: button
-        });
-    }
-}
+//function handleChange(state) {
+//    if (state.checked) {
+//        panel.show({
+//            position: button
+//        });
+//    }
+//}
 
 
-//====================== Option panel =======================
-var panel = panels.Panel({
-    width: 330,
-    height: 400,
-    contentURL: "./option.html",
-    onHide: handleHide
-});
+////====================== Option panel =======================
+//var panel = panels.Panel({
+//    width: 330,
+//    height: 400,
+//    contentURL: "./option.html",
+//    onHide: handleHide
+//});
 
-function handleHide() {
-    button.state("window", { checked: false });
-}
+//function handleHide() {
+//    button.state("window", { checked: false });
+//}
 
