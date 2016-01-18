@@ -145,7 +145,9 @@ function HTube() {
         window.setTimeout(function () {
             getPlayerInformation();
             setupUI();
-            //setQuality(Data.quality);
+
+            // Fix bug when replay status is preserved when switching to new video
+            setReplay();
         }, 1000);
     }
 

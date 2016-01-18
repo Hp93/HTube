@@ -1,8 +1,8 @@
 {
-    "title": "HTube",
+    "title": "Replay",
     "name": "firefox",
-    "version": "1.1.0",
-    "description": "Youtube auto replay with custom replay time.",
+    "version": "1.2.0",
+    "description": "Youtube auto replay with custom repeat time.",
     "main": "index.js",
     "author": "Hp93",
     "engines": {
@@ -10,6 +10,6 @@
         "fennec": ">=38.0a1"
     },
     "license": "MIT",
-    "keywords": ["htube", "replay", "youtube"],
-	"id": "htube@blankspace.shakeitoff"
+    "keywords": ["youtube", "replay", "youtube replay"],
+	"id": "youtube.replay@shakeitoff"
 }
