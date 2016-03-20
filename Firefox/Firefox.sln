@@ -9,9 +9,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Firefox", "Firefox", "{C726
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "data", "data", "{C68F4170-5801-4EA3-8769-DEDC91985C95}"
-	ProjectSection(SolutionItems) = preProject
-		data\option.html = data\option.html
-	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "style", "style", "{FD1D8BE3-D935-4FB2-8908-E13669EF1B13}"
 	ProjectSection(SolutionItems) = preProject
