@@ -2,7 +2,7 @@
     "title": "Replay",
     "name": "firefox",
     "version": "1.2.0",
-    "description": "Youtube auto replay with custom repeat time.",
+    "description": "Youtube auto replay with custom timer.",
     "main": "index.js",
     "author": "Hp93",
     "engines": {
@@ -11,5 +11,5 @@
     },
     "license": "MIT",
     "keywords": ["youtube", "replay", "youtube replay"],
-	"id": "youtube.replay@shakeitoff"
+	"id": "htube@blankspace.shakeitoff"
 }

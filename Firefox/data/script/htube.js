@@ -124,16 +124,6 @@ function HTube() {
         SettingUI.ui.on("setting:timeChange", function (e, timer) {
             Data.replayUsingTime = timer;
             setReplay();
-
-            //if (timer) {
-            //    Data.replayUsingTime = true;
-            //    setReplay(Data.replay, timer);
-            //} else {
-            //    if (Data.replayInterval) {
-            //        window.clearInterval(Data.replayInterval);
-            //    }
-            //    Data.replayUsingTime = false;
-            //}
         });
 
         SettingUI.ui.on("setting:settingFromChange", handleSettingTimeChange);
@@ -150,16 +140,6 @@ function HTube() {
             setReplay();
         }, 1000);
     }
-
-    //function setPlayerSize(mode) {
-    //    var btn = $("button.ytp-size-button.ytp-button");
-    //    if (mode === "cinema" && btn.attr("title") === "Cinema mode") {
-    //        btn.click();
-    //    }
-    //    if (mode === "default" && btn.attr("title") === "Default view:") {
-    //        btn.click();
-    //    }
-    //}
 
     ////////////////General methods////////////////
 
@@ -264,13 +244,3 @@ $(function () {
     }
 });
 
-
-//var qualities = {
-//    "small": "240p",
-//    "medium": "360p",
-//    "large": "480p",
-//    "hd720": "720p",
-//    "hd1080": "1080p",
-//    "highres": "best",
-//    "default": "default"
-//};
