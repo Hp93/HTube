@@ -20,7 +20,7 @@ function HTube() {
         quality: "small",
         replayInterval: null,
         prevUrl: ""
-    }
+    };
 
     // Youtube API data
     var YT = {
@@ -33,7 +33,7 @@ function HTube() {
             video_cued: 5
         },
         PlayerStateClass: ["unstarted-mode", "ended-mode", "playing-mode", "paused-mode", "buffering-mode"]
-    }
+    };
 
 
     //#region================ Private ===============================
@@ -61,7 +61,7 @@ function HTube() {
         if ((Player.getPlayerState() !== YT.PlayerState.playing) || (Player.getPlayerState() !== YT.PlayerState.buffering)) {
             Player.playVideo();
         }
-    };
+    }
 
     function setReplayTimer(silent) {
         ///<summary>
@@ -232,10 +232,10 @@ function HTube() {
             observer.observe(Player, { attributes: true, attributeOldValue: true });
 
         }, 500);
-    }
+    };
 
     //#endregion
-};
+}
 
 document.addEventListener("DOMContentLoaded", function () {
     if (!window.htube) {
