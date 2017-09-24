@@ -1,0 +1,21 @@
+{
+  "manifest_version": 2,
+  "name": "Replay",
+  "version": "2.0",
+  "description": "Auto replay with customer timer for Youtube.",
+  "icons": {
+    "48": "icon.png"
+  },
+  "content_scripts": [
+    {
+      "matches": [ "https://www.youtube.com/*" ],
+      "js": [ "bundle.js" ],
+      "css": [ "hstyle.css" ]
+    }
+  ],
+  "applications": {
+    "gecko": {
+      "id": "htube@blankspace.shakeitoff"
+    }
+  }
+}

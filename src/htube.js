@@ -1,19 +1,24 @@
 "use strict";
 
-window.alert("htube have been installed on your machine!");
+console.log("htube " + new Date().getMinutes());
+//node_modules\.bin\webpack --watch
+
+require("../src/icon.png");
+require("../src/hstyle.css");
+require("../src/manifest.json");
+
+import ControlSetting from "./interface.js";
+import h from "./helper.js";
 
 function HTube() {
-    // Waiving Xray Vision
-    var Document;
-
-    // Youtube player
-    var Player;
+    var Document,   // Waiving Xray Vision
+        _player;    // Youtube player
 
     // The UI for setting replay status and timer
     var SettingUI;
 
     // Miscellaneous configuration data
-    var Data = {
+    var _data = {
         replay: false,  // replay status
         replayUsingTime: false,
         duration: "00:00",
@@ -39,7 +44,7 @@ function HTube() {
     //#region================ Private ===============================
 
     function getPlayerInformation() {
-        Data.duration = formatTime(Player.getDuration());
+        _data.duration = formatTime(_player.getDuration());
     }
 
     function setReplay() {
@@ -47,19 +52,19 @@ function HTube() {
         /// Toggle replay.
         ///</summary>
 
-        $(Player).find("video")[0].loop = Data.replay;
+        _player.querySelector("video").loop = _data.replay;
 
-        if (!Data.replay) {
+        if (!_data.replay) {
             return;
         }
 
-        if (Data.replayUsingTime) {
+        if (_data.replayUsingTime) {
             setReplayTimer();
         }
 
         // Play video if replay is turned on and video is not playing.
-        if ((Player.getPlayerState() !== YT.PlayerState.playing) || (Player.getPlayerState() !== YT.PlayerState.buffering)) {
-            Player.playVideo();
+        if ((_player.getPlayerState() !== YT.PlayerState.playing) || (_player.getPlayerState() !== YT.PlayerState.buffering)) {
+            _player.playVideo();
         }
     }
 
@@ -68,41 +73,41 @@ function HTube() {
         /// Set replay timer used to replay only 1 part of the video.
         ///</summary>
 
-        if (Data.replayInterval) {
-            window.clearInterval(Data.replayInterval);
+        if (_data.replayInterval) {
+            window.clearInterval(_data.replayInterval);
         }
 
         var from = getSeconds(SettingUI.GetTime().from);
         var to = getSeconds(SettingUI.GetTime().to);
 
         if (silent) {
-            if (Player.getCurrentTime() < from) {
-                Player.seekTo(from, true);
+            if (_player.getCurrentTime() < from) {
+                _player.seekTo(from, true);
             }
         } else {
-            Player.seekTo(from, true);
+            _player.seekTo(from, true);
         }
 
-        Data.replayInterval = window.setInterval(function () {
+        _data.replayInterval = window.setInterval(function () {
             // Self stop interval
-            if (!Data.replay || !Data.replayUsingTime) {
-                window.clearInterval(Data.replayInterval);
+            if (!_data.replay || !_data.replayUsingTime) {
+                window.clearInterval(_data.replayInterval);
                 return;
             }
 
-            if (Player.getCurrentTime() >= to) {
-                Player.seekTo(from, true);
+            if (_player.getCurrentTime() >= to) {
+                _player.seekTo(from, true);
             }
         }, 500);
     }
 
     function handleSettingTimeChange() {
-        if (!Data.replay || !Data.replayUsingTime) {
+        if (!_data.replay || !_data.replayUsingTime) {
             return;
         }
 
-        if (Data.replayInterval) {
-            window.clearInterval(Data.replayInterval);
+        if (_data.replayInterval) {
+            window.clearInterval(_data.replayInterval);
         }
         setReplayTimer(true);
     }
@@ -112,33 +117,69 @@ function HTube() {
         var result = SettingUI.Create();
 
         if (!result) {
-            return;
+            return false;
         }
-        SettingUI.SetTime(Data.duration.replace(/\d/g, "0"), Data.duration);
+        SettingUI.SetTime(_data.duration.replace(/\d/g, "0"), _data.duration);
 
-        SettingUI.ui.on("setting:replayChange", function (e, state) {
-            Data.replay = state;
+        SettingUI.ui.addEventListener("setting:replayChange", function (e) {
+            _data.replay = e.detail.state;
             setReplay();
         });
-
-        SettingUI.ui.on("setting:timeChange", function (e, timer) {
-            Data.replayUsingTime = timer;
+        SettingUI.ui.addEventListener("setting:timeChange", function (e) {
+            _data.replayUsingTime = e.detail.timer;
             setReplay();
         });
-
-        SettingUI.ui.on("setting:settingFromChange", handleSettingTimeChange);
-
-        SettingUI.ui.on("setting:settingToChange", handleSettingTimeChange);
+        SettingUI.ui.addEventListener("setting:settingFromChange", handleSettingTimeChange);
+        SettingUI.ui.addEventListener("setting:settingToChange", handleSettingTimeChange);
+        return true;
     }
 
     function initialize() {
-        window.setTimeout(function () {
-            getPlayerInformation();
-            setupUI();
+        // window.setTimeout(function () {
+        getPlayerInformation();
+        var success = setupUI();
 
-            // Fix bug when replay status is preserved when switching to new video
-            setReplay();
-        }, 1000);
+        if (!success) {
+            return false;
+        }
+
+        // Fix bug when replay status is preserved when switching to new video
+        // setReplay();
+
+        return true;
+        // }, 1000);
+    }
+
+    function haunt() {
+        /// make sure the addon is already working when switching video
+
+        window.htubeInterval = window.setInterval(function () {
+            _player = Document.querySelector("#movie_player");
+
+            if (!_player) {
+                return;
+            }
+
+            var result = initialize();
+
+            if (result) {
+                window.clearInterval(window.htubeInterval);
+            }
+
+            // var observer = new MutationObserver(function (mutations) {
+            //     mutations.forEach(function () {
+            //         if (Document.location.toString() !== _data.prevUrl && Document.location.toString() !== "https://www.youtube.com/") {
+            //             // Optimized: set new URL asap to prevent possible duplicate initialize call
+            //             _data.prevUrl = Document.location.toString();
+            //             initialize();
+            //         } else {
+            //             _data.prevUrl = Document.location.toString();
+            //         }
+            //     });
+            // });
+            // // Start observe
+            // observer.observe(_player, { attributes: true, attributeOldValue: true });
+        }, 500);
     }
 
     ////////////////General methods////////////////
@@ -205,41 +246,19 @@ function HTube() {
 
     this.Create = function () {
         Document = window.wrappedJSObject.document;
-
-        // The player may not be here, but I can sense the turbulence in the wind, we will see it soon ...
-        window.htubeInterval = window.setInterval(function () {
-            Player = Document.querySelector("#movie_player");
-
-            if (!Player) {
-                return;
-            }
-            window.clearInterval(window.htubeInterval);
-            initialize();
-
-            var observer = new MutationObserver(function (mutations) {
-                mutations.forEach(function () {
-                    if (Document.location.toString() !== Data.prevUrl && Document.location.toString() !== "https://www.youtube.com/") {
-                        // Optimized: set new URL asap to prevent possible duplicate initialize call
-                        Data.prevUrl = Document.location.toString();
-                        initialize();
-                    } else {
-                        Data.prevUrl = Document.location.toString();
-                    }
-                });
-            });
-
-            // Start observe
-            observer.observe(Player, { attributes: true, attributeOldValue: true });
-
-        }, 500);
+        _player = Document.querySelector("#movie_player");
+        haunt();
     };
 
     //#endregion
 }
 
-document.addEventListener("DOMContentLoaded", function () {
+h.domReady(function () {
+    // only trigger one
+
     if (!window.htube) {
         window.htube = new HTube();
         window.htube.Create();
     }
 });
+
