@@ -207,3 +207,6 @@ build
 /src/HoneyHighPerformanceApp/errorlogfile
 /src/HoneyHighPerformanceApp/files/attachments
 /src/HoneyHighPerformanceApp/files
+
+# Custom
+dist/*

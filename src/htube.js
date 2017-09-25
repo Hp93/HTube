@@ -11,15 +11,15 @@ import ControlSetting from "./interface.js";
 import h from "./helper.js";
 
 function HTube() {
-    var Document,   // Waiving Xray Vision
-        _player;    // Youtube player
+    var Document, // Waiving Xray Vision
+        _player; // Youtube player
 
     // The UI for setting replay status and timer
-    var SettingUI;
+    var _settingUI;
 
     // Miscellaneous configuration data
     var _data = {
-        replay: false,  // replay status
+        replay: false, // replay status
         replayUsingTime: false,
         duration: "00:00",
         quality: "small",
@@ -77,8 +77,8 @@ function HTube() {
             window.clearInterval(_data.replayInterval);
         }
 
-        var from = getSeconds(SettingUI.GetTime().from);
-        var to = getSeconds(SettingUI.GetTime().to);
+        var from = getSeconds(_settingUI.GetTime().from);
+        var to = getSeconds(_settingUI.GetTime().to);
 
         if (silent) {
             if (_player.getCurrentTime() < from) {
@@ -113,73 +113,88 @@ function HTube() {
     }
 
     function setupUI() {
-        SettingUI = new ControlSetting();
-        var result = SettingUI.Create();
+        if (_settingUI) {
+            //console.log("UI is already created");
+            return true;
+        }
+        _settingUI = new ControlSetting();
+        var result = _settingUI.Create();
 
         if (!result) {
             return false;
         }
-        SettingUI.SetTime(_data.duration.replace(/\d/g, "0"), _data.duration);
 
-        SettingUI.ui.addEventListener("setting:replayChange", function (e) {
+        _settingUI.ui.addEventListener("setting:replayChange", function (e) {
             _data.replay = e.detail.state;
             setReplay();
         });
-        SettingUI.ui.addEventListener("setting:timeChange", function (e) {
+        _settingUI.ui.addEventListener("setting:timeChange", function (e) {
             _data.replayUsingTime = e.detail.timer;
             setReplay();
         });
-        SettingUI.ui.addEventListener("setting:settingFromChange", handleSettingTimeChange);
-        SettingUI.ui.addEventListener("setting:settingToChange", handleSettingTimeChange);
+        _settingUI.ui.addEventListener("setting:settingFromChange", handleSettingTimeChange);
+        _settingUI.ui.addEventListener("setting:settingToChange", handleSettingTimeChange);
         return true;
     }
 
     function initialize() {
-        // window.setTimeout(function () {
         getPlayerInformation();
-        var success = setupUI();
 
-        if (!success) {
+        if (!setupUI()) {
             return false;
         }
 
-        // Fix bug when replay status is preserved when switching to new video
-        // setReplay();
-
+        // Reset state
+        _settingUI.ToggleReplay(false);
+        _settingUI.ToggleTimer(false);
+        _settingUI.SetTime(_data.duration.replace(/\d/g, "0"), _data.duration);
+        
         return true;
-        // }, 1000);
     }
 
     function haunt() {
         /// make sure the addon is already working when switching video
 
         window.htubeInterval = window.setInterval(function () {
-            _player = Document.querySelector("#movie_player");
-
-            if (!_player) {
+            if (isWorking()) {
                 return;
             }
+            _player = Document.querySelector("#movie_player");
 
-            var result = initialize();
+            initialize();
 
-            if (result) {
-                window.clearInterval(window.htubeInterval);
-            }
+            // if (result) {
+            //     window.clearInterval(window.htubeInterval);
+            // }
 
-            // var observer = new MutationObserver(function (mutations) {
-            //     mutations.forEach(function () {
-            //         if (Document.location.toString() !== _data.prevUrl && Document.location.toString() !== "https://www.youtube.com/") {
-            //             // Optimized: set new URL asap to prevent possible duplicate initialize call
-            //             _data.prevUrl = Document.location.toString();
-            //             initialize();
-            //         } else {
-            //             _data.prevUrl = Document.location.toString();
-            //         }
-            //     });
-            // });
-            // // Start observe
-            // observer.observe(_player, { attributes: true, attributeOldValue: true });
-        }, 500);
+            var observer = new MutationObserver(function (mutations) {
+                mutations.forEach(function () {
+                    var location = Document.location.toString();
+
+                    if (location !== _data.prevUrl && location !== "https://www.youtube.com/") {
+                        // Optimized: set new URL asap to prevent possible duplicate initialize call
+                        _data.prevUrl = location;
+                        console.log("new url: " + location);
+                        initialize();
+                    } else {
+                        _data.prevUrl = location;
+                    }
+                });
+            });
+
+            // Start observe the player to detect when video is changed
+            observer.observe(_player, {
+                attributes: true,
+                attributeOldValue: true
+            });
+        }, 3000);
+    }
+
+    function isWorking() {
+        if (_player && typeof _player.getPlayerState === "function" && _settingUI && document.querySelector(".htube")) {
+            return true;
+        }
+        return false;
     }
 
     ////////////////General methods////////////////
@@ -261,4 +276,3 @@ h.domReady(function () {
         window.htube.Create();
     }
 });
-
